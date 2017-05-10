@@ -8,6 +8,7 @@ function love.load()
   love.graphics.setFont(font)
   time = 0
   state = 'title'
+  scale = 2
 end
 
 function love.keypressed(key)
@@ -35,7 +36,7 @@ end
 
 function love.draw()
   if state == 'title' then
-    love.graphics.scale(2, 2)
+    love.graphics.scale(scale, scale)
     love.graphics.push()
     love.graphics.scale(5, 5)
     love.graphics.print('pong', 21, 22)
@@ -50,7 +51,7 @@ function love.draw()
       love.graphics.print('press o for options', 105, 205)
     end
   elseif state == 'options' then
-    love.graphics.scale(2, 2)
-    love.graphics.print('scale <  >', 5, 5)
+    love.graphics.scale(scale, scale)
+    love.graphics.print('scale < ' .. ' >', 5, 5)
   end
 end
