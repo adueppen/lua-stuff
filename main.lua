@@ -2,7 +2,6 @@
 function love.load()
   love.window.setMode(800, 600, {fullscreen=false, resizable=false, centered=true})
   love.window.setTitle('Pong')
-  love.graphics.setBackgroundColor(0, 0, 0)
   font = love.graphics.newImageFont('res/pongfont.png', ' abcdefghijklmnopqrstuvwxyz<>12345-', 2)
   font:setFilter('nearest', 'nearest')
   love.graphics.setFont(font)
@@ -19,7 +18,7 @@ function love.load()
 end
 
 function resizeWindow()
-  love.window.setMode(400 * scale, 300 * scale)'black'
+  love.window.setMode(400 * scale, 300 * scale)
 end
 
 function love.keypressed(key)
@@ -132,11 +131,7 @@ function love.draw()
     love.graphics.print('background color < ' .. colorNameTable[bgcolor] .. ' >', 5, 60)
     -- more options
     if selectedOption == 1 then
-      if fgcolor == 4 then
-        love.graphics.setColor(colorTable[7])
-      else
-        love.graphics.setColor(colorTable[4])
-      end
+      goodContrast()
       love.graphics.print(' < ' .. scale .. ' >', 55, 30)
       love.graphics.setColor(colorTable[fgcolor])
     elseif selectedOption == 2 then
