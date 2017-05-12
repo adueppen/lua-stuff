@@ -2,6 +2,7 @@
 function love.load()
   love.window.setMode(800, 600, {fullscreen=false, resizable=false, centered=true})
   love.window.setTitle('Pong')
+  love.keyboard.setKeyRepeat(true)
   font = love.graphics.newImageFont('res/pongfont.png', ' abcdefghijklmnopqrstuvwxyz<>12345-', 2)
   font:setFilter('nearest', 'nearest')
   love.graphics.setFont(font)
@@ -15,6 +16,8 @@ function love.load()
   bgcolor = 1
   colorNameTable = {'black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white'}
   colorTable = {{0, 0, 0}, {255, 0, 0}, {0, 255, 0}, {255, 255, 0}, {0, 0, 255}, {255, 0, 255}, {0, 255, 255}, {255, 255, 255}}
+  player = {y = 10}
+  opponent = {y = 10}
 end
 
 function resizeWindow()
@@ -72,8 +75,16 @@ function love.keypressed(key)
     elseif selectedOption == 3 then
       bgcolor = colorChange(bgcolor, key)
     end
+  elseif state == 'game' then
+    if key == 'down' then
+      player.y = player.y + 10
+    elseif key == 'up' then
+      player.y = player.y - 10
+    end
   end
 end
+
+
 
 function colorChange(selColor, key)
   if key == 'right' then
@@ -141,5 +152,7 @@ function love.draw()
       goodContrast()
       love.graphics.print(' < ' .. colorNameTable[bgcolor] .. ' >', 166, 60)
     end
+  elseif state == 'game' then
+    love.graphics.rectangle('fill', 10, player.y, 10, 40)
   end
 end
