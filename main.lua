@@ -18,6 +18,7 @@ function love.load()
   colorTable = {{0, 0, 0}, {255, 0, 0}, {0, 255, 0}, {255, 255, 0}, {0, 0, 255}, {255, 0, 255}, {0, 255, 255}, {255, 255, 255}}
   player = {y = 80, points = 0}
   opponent = {y = 80, points = 0}
+  ball = {x = 200, y = 150, angle = 0}
 end
 
 function resizeWindow()
@@ -103,7 +104,7 @@ function colorChange(selColor, key)
 end
 
 function goodContrast()
-  if fgcolor == 4 or bgcolor == 4 then
+  if fgcolor == 4 or bgcolor == 4 or bgcolor == 8 then
     love.graphics.setColor(colorTable[7])
   else
     love.graphics.setColor(colorTable[4])
@@ -115,9 +116,13 @@ function love.update(dt)
     time = time + dt
   elseif state == 'game' then
     if love.keyboard.isDown('down') then
-      player.y = player.y + 5
+      if player.y <= 250 then
+        player.y = player.y + 5
+      end
     elseif love.keyboard.isDown('up') then
-      player.y = player.y - 5
+      if player.y >= 70 then
+        player.y = player.y - 5
+      end
     end
   end
 end
@@ -142,7 +147,7 @@ function love.draw()
     love.graphics.print('scale < ' .. scale .. ' >', 5, 30)
     love.graphics.print('foreground color < ' .. colorNameTable[fgcolor] .. ' >', 5, 45)
     love.graphics.print('background color < ' .. colorNameTable[bgcolor] .. ' >', 5, 60)
-    -- change awkward color change implementation to printf
+    -- change awkward color change implementation to printf at some point
     if selectedOption == 1 then
       goodContrast()
       love.graphics.print(' < ' .. scale .. ' >', 55, 30)
@@ -158,7 +163,8 @@ function love.draw()
     love.graphics.rectangle('fill', 0, 60, 400, 10)
     love.graphics.print(player.points, 100, 2, 0, 4, 4)
     love.graphics.print(opponent.points, 260, 2, 0, 4, 4)
-    love.graphics.rectangle('fill', 10, player.y, 10, 40)
-    love.graphics.rectangle('fill', 380, opponent.y, 10, 40)
+    love.graphics.rectangle('fill', 10, player.y, 10, 50)
+    love.graphics.rectangle('fill', 380, opponent.y, 10, 50)
+    love.graphics.rectangle('fill', ball.x, ball.y, 15, 15)
   end
 end
