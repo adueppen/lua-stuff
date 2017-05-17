@@ -18,7 +18,7 @@ function love.load()
   colorTable = {{0, 0, 0}, {255, 0, 0}, {0, 255, 0}, {255, 255, 0}, {0, 0, 255}, {255, 0, 255}, {0, 255, 255}, {255, 255, 255}}
   player = {y = 80, points = 0}
   opponent = {y = 80, points = 0}
-  ball = {x = 200, y = 150, angle = 0}
+  ball = {x = 200, y = 150, angle = 0, speed = 5}
 end
 
 function resizeWindow()
@@ -124,6 +124,8 @@ function love.update(dt)
         player.y = player.y - 5
       end
     end
+    ball.x = ball.x + ball.speed
+    ball.y = ball.y + ball.y * ball.angle
   end
 end
 
