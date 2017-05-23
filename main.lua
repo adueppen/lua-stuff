@@ -53,27 +53,11 @@ function love.keypressed(key)
         selectedOption = selectedOption - 1
       end
     elseif selectedOption == 1 then
-      if key == 'right' then
-        if scale == 5 then
-          scale = 1
-          resizeWindow()
-        else
-          scale = scale + 1
-          resizeWindow()
-        end
-      elseif key == 'left' then
-        if scale == 1 then
-          scale = 5
-          resizeWindow()
-        else
-          scale = scale - 1
-          resizeWindow()
-        end
-      end
+      scale = menuIterate(scale, key, 5)
     elseif selectedOption == 2 then
-      fgcolor = colorChange(fgcolor, key)
+      fgcolor = menuIterate(fgcolor, key, 8)
     elseif selectedOption == 3 then
-      bgcolor = colorChange(bgcolor, key)
+      bgcolor = menuIterate(bgcolor, key, 8)
     end
   elseif state == 'game' then
     if key == 'escape' then
@@ -87,27 +71,29 @@ function love.keypressed(key)
   end
 end
 
-function colorChange(selColor, key)
+function menuIterate(valToChange, key, max, functionToRun)
   if key == 'right' then
-    if selColor == 8 then
+    if valToChange == max then
       return 1
     else
-      return selColor + 1
+      return valToChange + 1
     end
+    functionToRun()
   elseif key == 'left' then
-    if selColor == 1 then
-      return 8
+    if valToChange == 1 then
+      return max
     else
-      return selColor - 1
+      return valToChange - 1
     end
+    functionToRun()
   end
 end
 
 function goodContrast()
-  if fgcolor == 4 or bgcolor == 4 or bgcolor == 8 then
-    love.graphics.setColor(colorTable[7])
+  if fgcolor == 4 or bgcolor == 4 then
+    return colorTable[7]
   else
-    love.graphics.setColor(colorTable[4])
+    return colorTable[4]
   end
 end
 
@@ -124,8 +110,8 @@ function love.update(dt)
         player.y = player.y - 5
       end
     end
-    ball.x = ball.x + ball.speed
-    ball.y = ball.y + ball.y * ball.angle
+    ball.x = ball.x + (math.cos(math.rad(ball.angle)) * ball.speed)
+    ball.y = ball.y + (math.sin(math.rad(ball.angle)) * ball.speed)
   end
 end
 
@@ -149,17 +135,15 @@ function love.draw()
     love.graphics.print('scale < ' .. scale .. ' >', 5, 30)
     love.graphics.print('foreground color < ' .. colorNameTable[fgcolor] .. ' >', 5, 45)
     love.graphics.print('background color < ' .. colorNameTable[bgcolor] .. ' >', 5, 60)
-    -- change awkward color change implementation to printf at some point
     if selectedOption == 1 then
-      goodContrast()
-      love.graphics.print(' < ' .. scale .. ' >', 55, 30)
-      love.graphics.setColor(colorTable[fgcolor])
+      love.graphics.setColor(255, 255, 255)
+      love.graphics.printf({colorTable[fgcolor], 'scale', goodContrast(), ' < ' .. scale .. ' >'}, 5, 30, love.graphics.getWidth())
     elseif selectedOption == 2 then
-      goodContrast()
-      love.graphics.print(' < ' .. colorNameTable[fgcolor] .. ' >', 166, 45)
+      love.graphics.setColor(255, 255, 255)
+      love.graphics.printf({colorTable[fgcolor], 'foreground color', goodContrast(), ' < ' .. colorNameTable[fgcolor] .. ' >'}, 5, 45, love.graphics.getWidth())
     elseif selectedOption == 3 then
-      goodContrast()
-      love.graphics.print(' < ' .. colorNameTable[bgcolor] .. ' >', 166, 60)
+      love.graphics.setColor(255, 255, 255)
+      love.graphics.printf({colorTable[fgcolor], 'background color', goodContrast(), ' < ' .. colorNameTable[bgcolor] .. ' >'}, 5, 60, love.graphics.getWidth())
     end
   elseif state == 'game' then
     love.graphics.rectangle('fill', 0, 60, 400, 10)
