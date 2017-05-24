@@ -8,6 +8,10 @@ function love.load()
   love.graphics.setFont(font)
   love.graphics.setLineStyle('rough')
   love.graphics.setLineWidth(2)
+  math.randomseed(os.time())
+  for count = 1, math.random(10) do
+    math.random()
+  end
   time = 0
   state = 'title'
   scale = 2
@@ -18,7 +22,8 @@ function love.load()
   colorTable = {{0, 0, 0}, {255, 0, 0}, {0, 255, 0}, {255, 255, 0}, {0, 0, 255}, {255, 0, 255}, {0, 255, 255}, {255, 255, 255}}
   player = {y = 80, points = 0}
   opponent = {y = 80, points = 0}
-  ball = {x = 200, y = 150, angle = 0, speed = 5}
+  ball = {x = 200, y = 150, angle = 0, speed = 4}
+  ball.angle = math.random(145, 215)
 end
 
 function resizeWindow()
@@ -54,6 +59,7 @@ function love.keypressed(key)
       end
     elseif selectedOption == 1 then
       scale = menuIterate(scale, key, 5)
+      resizeWindow()
     elseif selectedOption == 2 then
       fgcolor = menuIterate(fgcolor, key, 8)
     elseif selectedOption == 3 then
@@ -66,31 +72,31 @@ function love.keypressed(key)
       opponent.y = 80
       player.points = 0
       opponent.points = 0
+      ball = {x = 200, y = 150, angle = 0, speed = 4}
+      ball.angle = math.random(145, 215)
     end
     -- maybe add a pause menu at some point
   end
 end
 
-function menuIterate(valToChange, key, max, functionToRun)
+function menuIterate(value, key, max)
   if key == 'right' then
-    if valToChange == max then
+    if value == max then
       return 1
     else
-      return valToChange + 1
+      return value + 1
     end
-    functionToRun()
   elseif key == 'left' then
-    if valToChange == 1 then
+    if value == 1 then
       return max
     else
       return valToChange - 1
     end
-    functionToRun()
   end
 end
 
 function goodContrast()
-  if fgcolor == 4 or bgcolor == 4 then
+  if fgcolor == 4 or bgcolor == 4 or bgcolor == 8 then
     return colorTable[7]
   else
     return colorTable[4]
