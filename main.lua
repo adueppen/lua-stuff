@@ -90,7 +90,7 @@ function menuIterate(value, key, max)
     if value == 1 then
       return max
     else
-      return valToChange - 1
+      return value - 1
     end
   end
 end
@@ -115,6 +115,10 @@ function love.update(dt)
       if player.y >= 70 then
         player.y = player.y - 5
       end
+    end
+    if ball.y <= 70 or ball.y >= 285 then
+      ball.angle = 540 - ball.angle
+      ball.speed = ball.speed * -1
     end
     ball.x = ball.x + (math.cos(math.rad(ball.angle)) * ball.speed)
     ball.y = ball.y + (math.sin(math.rad(ball.angle)) * ball.speed)
