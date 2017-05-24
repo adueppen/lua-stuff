@@ -117,7 +117,7 @@ function love.update(dt)
       end
     end
     if ball.y <= 70 or ball.y >= 285 then
-      ball.angle = 540 - ball.angle
+      ball.angle = 180 - ball.angle
       ball.speed = ball.speed * -1
     end
     ball.x = ball.x + (math.cos(math.rad(ball.angle)) * ball.speed)
