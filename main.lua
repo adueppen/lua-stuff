@@ -22,8 +22,7 @@ function love.load()
   colorTable = {{0, 0, 0}, {255, 0, 0}, {0, 255, 0}, {255, 255, 0}, {0, 0, 255}, {255, 0, 255}, {0, 255, 255}, {255, 255, 255}}
   player = {y = 80, points = 0}
   opponent = {y = 80, points = 0}
-  ball = {x = 200, y = 150, angle = 0, speed = 4}
-  ball.angle = math.random(145, 215)
+  ball = {x = 200, y = 150, angle = math.random(145, 215), speed = 4}
 end
 
 function resizeWindow()
@@ -72,8 +71,7 @@ function love.keypressed(key)
       opponent.y = 80
       player.points = 0
       opponent.points = 0
-      ball = {x = 200, y = 150, angle = 0, speed = 4}
-      ball.angle = math.random(145, 215)
+      ball = {x = 200, y = 150, angle = math.random(145, 215), speed = 4}
     end
     -- maybe add a pause menu at some point
   end
@@ -119,6 +117,27 @@ function love.update(dt)
     if ball.y <= 70 or ball.y >= 285 then
       ball.angle = 180 - ball.angle
       ball.speed = ball.speed * -1
+    end
+    if ball.x <= 0 or ball.x >= 400 then
+      if ball.x <=0 then
+        opponent.points = opponent.points + 1
+      elseif ball.x >= 400 then
+        player.points = player.points + 1
+      end
+      ball = {x = 200, y = 150, angle = math.random(145, 215), speed = 4}
+    end
+    if ball.x <= 20 then
+      if ball.y >= player.y - 10 and ball.y <= player.y + 50 then
+        ball.x = 21
+        ball.angle = 360 - ball.angle
+        ball.speed = ball.speed * -1
+      end
+    elseif ball.x >= 365 then
+      if ball.y >= opponent.y - 10 and ball.y <= opponent.y + 50 then
+        ball.x = 364
+        ball.angle = 360 - ball.angle
+        ball.speed = ball.speed * -1
+      end
     end
     ball.x = ball.x + (math.cos(math.rad(ball.angle)) * ball.speed)
     ball.y = ball.y + (math.sin(math.rad(ball.angle)) * ball.speed)
