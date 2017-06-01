@@ -18,6 +18,7 @@ function love.load()
   selectedOption = 1
   fgcolor = 8
   bgcolor = 1
+  scoreLimit = 6
   colorNameTable = {'black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white'}
   colorTable = {{0, 0, 0}, {255, 0, 0}, {0, 255, 0}, {255, 255, 0}, {0, 0, 255}, {255, 0, 255}, {0, 255, 255}, {255, 255, 255}}
   player = {y = 80, points = 0}
@@ -45,14 +46,14 @@ function love.keypressed(key)
     if key == 'escape' then
       state = 'title'
     elseif key == 'down' then
-      if selectedOption == 3 then
+      if selectedOption == 4 then
         selectedOption = 1
       else
         selectedOption = selectedOption + 1
       end
     elseif key == 'up' then
       if selectedOption == 1 then
-        selectedOption = 3
+        selectedOption = 4
       else
         selectedOption = selectedOption - 1
       end
@@ -63,6 +64,8 @@ function love.keypressed(key)
       fgcolor = menuIterate(fgcolor, key, 8)
     elseif selectedOption == 3 then
       bgcolor = menuIterate(bgcolor, key, 8)
+    elseif selectedOption == 4 then
+      scoreLimit = menuIterate(scoreLimit, key, 9)
     end
   elseif state == 'game' then
     if key == 'escape' then
@@ -119,10 +122,18 @@ function love.update(dt)
       ball.speed = ball.speed * -1
     end
     if ball.x <= 0 or ball.x >= 400 then
-      if ball.x <=0 then
-        opponent.points = opponent.points + 1
+      if ball.x <= 0 then
+        if opponent.points == scoreLimit then
+          state = win
+        else
+          opponent.points = opponent.points + 1
+        end
       elseif ball.x >= 400 then
-        player.points = player.points + 1
+        if player.points == scoreLimit then
+          state = win
+        else
+          player.points = player.points + 1
+        end
       end
       ball = {x = 200, y = 150, angle = math.random(145, 215), speed = 4}
     end
@@ -164,6 +175,7 @@ function love.draw()
     love.graphics.print('scale < ' .. scale .. ' >', 5, 30)
     love.graphics.print('foreground color < ' .. colorNameTable[fgcolor] .. ' >', 5, 45)
     love.graphics.print('background color < ' .. colorNameTable[bgcolor] .. ' >', 5, 60)
+    love.graphics.print('score limit < ' .. scoreLimit .. ' >', 5, 75)
     if selectedOption == 1 then
       love.graphics.setColor(255, 255, 255)
       love.graphics.printf({colorTable[fgcolor], 'scale', goodContrast(), ' < ' .. scale .. ' >'}, 5, 30, love.graphics.getWidth())
@@ -173,6 +185,9 @@ function love.draw()
     elseif selectedOption == 3 then
       love.graphics.setColor(255, 255, 255)
       love.graphics.printf({colorTable[fgcolor], 'background color', goodContrast(), ' < ' .. colorNameTable[bgcolor] .. ' >'}, 5, 60, love.graphics.getWidth())
+    elseif selectedOption == 4 then
+      love.graphics.setColor(255, 255, 255)
+      love.graphics.printf({colorTable[fgcolor], 'score limit', goodContrast(), ' < ' .. scoreLimit .. ' >'}, 5, 75, love.graphics.getWidth())
     end
   elseif state == 'game' then
     love.graphics.rectangle('fill', 0, 60, 400, 10)
@@ -181,5 +196,7 @@ function love.draw()
     love.graphics.rectangle('fill', 10, player.y, 10, 50)
     love.graphics.rectangle('fill', 380, opponent.y, 10, 50)
     love.graphics.rectangle('fill', ball.x, ball.y, 15, 15)
+  elseif state == 'win' then
+    love.graphics.print('win', 50, 100)
   end
 end
